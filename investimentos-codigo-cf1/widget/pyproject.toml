@@ -1,0 +1,13 @@
+# Só configuração de lint/format do widget (ele não é um pacote instalável).
+[tool.black]
+line-length = 110
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "RUF100"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

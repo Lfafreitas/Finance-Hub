@@ -1,0 +1,29 @@
+# Dados financeiros pessoais — nunca versionar
+extratos-nubank/
+faturas-nubank/
+Entrada/
+claude-analises/
+carga-inicial/
+*.ofx
+*.pdf
+*.csv
+*.zip
+
+# Segredos e bancos locais
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+*.sqlite3
+.dashboard/
+
+# Dependências e caches
+node_modules/
+__pycache__/
+.venv/
+venv/
+
+# Scripts com os dados reais da carteira e versões pessoais dos prompts (só no PC)
+Atualizar carteira.bat
+investimentos-codigo-cf1/backend/docs/agente-prompts/pessoal/

@@ -1,0 +1,342 @@
+@import "tailwindcss";
+
+/* IBM Plex Sans vem junto com o app (nada é buscado na internet). */
+@import "@fontsource/ibm-plex-sans/300.css";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+/* Serifa só no jornal (cabeçalho, manchetes): mesma família do Plex Sans. */
+@import "@fontsource/ibm-plex-serif/500.css";
+@import "@fontsource/ibm-plex-serif/600.css";
+/* Fontes de leitura (Jornal): só baixam quando escolhidas. */
+@import "@fontsource/atkinson-hyperlegible-next/400.css";
+@import "@fontsource/atkinson-hyperlegible-next/700.css";
+@import "@fontsource/lexend/400.css";
+@import "@fontsource/lexend/600.css";
+@import "@fontsource/opendyslexic/400.css";
+@import "@fontsource/opendyslexic/700.css";
+
+/*
+ * Identidade visual — "tinta de extrato".
+ *
+ * Fundo grafite com um leve tom azul-esverdeado (não preto puro), texto
+ * frio e um único acento azul-gelo para o que está selecionado e para o
+ * foco do teclado. Verde, vermelho e âmbar são só para sinal (ganho,
+ * perda, atenção) e sempre vêm com texto ou sinal junto.
+ *
+ * As classes `neutral-*` do Tailwind passam a ser esta escala, então o
+ * app inteiro muda de pele sem reescrever cada tela.
+ */
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "IBM Plex Serif", ui-serif, Georgia, "Times New Roman", serif;
+
+  --color-neutral-50: #f2f5f6;
+  --color-neutral-100: #e4e9ec;
+  --color-neutral-200: #d3dbe0;
+  --color-neutral-300: #bcc8cf;
+  --color-neutral-400: #9eadb6;
+  --color-neutral-500: #73848f;
+  --color-neutral-600: #53636d;
+  --color-neutral-700: #364550;
+  --color-neutral-800: #24313a;
+  --color-neutral-900: #141b1f;
+  --color-neutral-950: #0e1316;
+
+  /* Ganho */
+  --color-emerald-200: #b3ebcd;
+  --color-emerald-300: #7fd9aa;
+  --color-emerald-400: #4cc38a;
+  /* Perda */
+  --color-red-100: #fde0dc;
+  --color-red-200: #f9c1b9;
+  --color-red-300: #f59e91;
+  --color-red-400: #f07a6a;
+  /* Atenção */
+  --color-amber-100: #f8ecd0;
+  --color-amber-200: #f0d79d;
+  --color-amber-300: #e2b149;
+  /* Acento (selecionado, foco, links) */
+  --color-sky-300: #b7daf0;
+  --color-sky-400: #8fc1e3;
+  --color-sky-500: #6aa6d1;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-neutral-950);
+  font-feature-settings: "kern", "liga";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* iPhone, aberto pela Tela de Início: a página começa abaixo da barra de
+     status (que fica transparente). No computador estes valores são 0. */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Faixa da barra de status do iPhone: o conteúdo rolado passa por baixo. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: env(safe-area-inset-top);
+  background-color: var(--color-neutral-950);
+  z-index: 50;
+}
+
+/* Números alinhados em colunas, sem "pular" ao atualizar. */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Foco do teclado sempre visível, no acento. */
+:focus-visible {
+  outline: 2px solid var(--color-sky-400);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* O número principal de cada moeda: leve, grande e com dígitos fixos. */
+.figure-hero {
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+/* Textos dos gráficos (Recharts) usam a mesma fonte da tela. */
+.recharts-wrapper,
+.recharts-text {
+  font-family: inherit;
+}
+
+/* --- Leitura (Jornal) -------------------------------------------------------- */
+
+/* Texto corrido do Jornal com as preferências do leitor (readingPrefs.ts). */
+.reading {
+  font-family: var(--read-font, var(--font-sans));
+  letter-spacing: var(--read-letter, 0);
+  word-spacing: var(--read-word, 0);
+}
+.reading .read-body {
+  font-size: var(--read-size, 17px);
+  line-height: var(--read-line, 1.6);
+  max-width: var(--read-width, 70ch);
+}
+.reading .read-small {
+  font-size: calc(var(--read-size, 17px) * 0.88);
+  line-height: var(--read-line, 1.6);
+}
+/* Fundo "papel": menos contraste, mais confortável para quem tem dislexia. */
+.reading[data-tint="papel"] {
+  --color-neutral-50: #f1e8d6;
+  --color-neutral-100: #ece2cf;
+  --color-neutral-200: #e2d7c2;
+  --color-neutral-300: #d3c7b0;
+  --color-neutral-400: #b3a68f;
+}
+/* O fundo quente vai de ponta a ponta da tela, não só na coluna de texto. */
+.reading[data-tint="papel"] {
+  background-color: #1c1915;
+  box-shadow: 0 0 0 100vmax #1c1915;
+  clip-path: inset(0 -100vmax);
+}
+.reading[data-tint="papel"] .read-surface {
+  background-color: #24201a;
+}
+.reading mark {
+  background-color: rgb(226 177 73 / 0.3);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 1px;
+}
+
+/* --- Movimento ------------------------------------------------------------ */
+
+/* Troca de tela (View Transitions): a barra de abas fica parada. */
+[data-testid="tab-bar"] {
+  view-transition-name: tabbar;
+}
+[data-testid="sidebar"] {
+  view-transition-name: sidebar;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 260ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+::view-transition-old(root) {
+  animation-name: vt-fade-out;
+}
+::view-transition-new(root) {
+  animation-name: vt-fade-in;
+}
+:root[data-nav="push"]::view-transition-old(root) {
+  animation-name: vt-push-out;
+}
+:root[data-nav="push"]::view-transition-new(root) {
+  animation-name: vt-push-in;
+}
+:root[data-nav="pop"]::view-transition-old(root) {
+  animation-name: vt-pop-out;
+}
+:root[data-nav="pop"]::view-transition-new(root) {
+  animation-name: vt-pop-in;
+}
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes vt-push-out {
+  to {
+    opacity: 0.4;
+    transform: translateX(-25%);
+  }
+}
+@keyframes vt-push-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes vt-pop-out {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes vt-pop-in {
+  from {
+    opacity: 0.4;
+    transform: translateX(-25%);
+  }
+}
+
+/* Abertura: as partes do dashboard sobem em sequência, uma vez. */
+.reveal {
+  animation: reveal-up 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms + var(--reveal-base, 0ms));
+}
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* Ícone da abertura: a linha se desenha e o ponto acende. */
+.intro-line {
+  stroke-dasharray: 520;
+  stroke-dashoffset: 520;
+  animation: intro-draw 720ms cubic-bezier(0.6, 0, 0.2, 1) 80ms forwards;
+}
+.intro-dot {
+  transform-origin: 400px 160px;
+  transform: scale(0);
+  animation: intro-pop 360ms cubic-bezier(0.3, 1.6, 0.5, 1) 720ms forwards;
+}
+.intro-overlay {
+  animation: intro-leave 360ms ease-in 1100ms forwards;
+}
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes intro-pop {
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes intro-leave {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Folha (sheet) do iOS: sobe de baixo no celular, aparece suave no computador. */
+.sheet-up {
+  animation: sheet-up 340ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes sheet-up {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+}
+
+/* Barras do gráfico de fluxo crescem a partir da linha de base. */
+.bar-grow {
+  transform-origin: var(--origin, bottom);
+  animation: bar-grow 620ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+@keyframes bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+/* Barras horizontais se revelam da esquerda para a direita, uma vez. */
+.reveal-x {
+  animation: reveal-x 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+@keyframes reveal-x {
+  from {
+    clip-path: inset(0 100% 0 0 round 999px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 999px);
+  }
+}
+
+/* Gráfico em foco pelo teclado: o anel não briga com as linhas. */
+[role="group"].cursor-crosshair:focus-visible,
+[role="group"][tabindex="0"]:focus-visible {
+  outline-offset: 4px;
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Celular: a fonte do sistema (SF Pro no iPhone), como os apps da Apple, e
+   rolagem sem "quique" atrás das barras fixas. */
+@media (max-width: 767px) {
+  :root {
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif;
+  }
+  body {
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+  /* Tabela larga rola de lado dentro dela mesma, nunca a página inteira
+     (a página que rola de lado desalinha as barras fixas). */
+  table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  /* Menos de 16 px num campo faz o Safari dar zoom ao tocar. */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
